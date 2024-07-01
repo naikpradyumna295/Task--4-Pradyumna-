@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  strapi:
+    image: strapi/strapi
+    container_name: strapi-app
+    environment:
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: ./data/data.db
+    volumes:
+      - ./app:/srv/app
+    ports:
+      - '1337:1337'
+    networks:
+      - strapi-network
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - strapi
+    networks:
+      - strapi-network
+
+networks:
+  strapi-network:
+    driver: bridge
