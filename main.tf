@@ -4,7 +4,7 @@ provider "aws" {
 
 resource "aws_key_pair" "deployer" {
   key_name   = "Task4"
-  public_key = file("C:/Users/LENOVO/Desktop/TASK-4/Task4.pub")
+  public_key = var.ssh_public_key
 }
 
 resource "aws_instance" "strapi_instance" {
@@ -14,33 +14,19 @@ resource "aws_instance" "strapi_instance" {
 
   security_groups = [aws_security_group.strapi_sg.name]
 
-  provisioner "file" {
-    source      = "C:/Users/LENOVO/Desktop/TASK-4/Task4.pem"
-    destination = "/home/ubuntu/Task4.pem"
-  }
-
-  provisioner "remote-exec" {
-    inline = [
-      "chmod 400 /home/ubuntu/MyNewKeyPair.pem",
-      "apt-get update -y",
-      "apt-get install -y docker.io docker-compose",
-      "systemctl start docker",
-      "systemctl enable docker",
-      "ufw allow 'Nginx Full'",
-      "git clone https://github.com/naikpradyumna295/Task--4-Pradyumna-.git /home/ubuntu/strapi-app",
-      "cd /home/ubuntu/strapi-app",
-      "docker-compose up -d",
-      "apt-get install -y certbot python3-certbot-nginx",
-      "certbot --nginx -d Pradyumna.contentecho.in --non-interactive --agree-tos --email naikpradyumna295@example.com"
-    ]
-
-    connection {
-      type        = "ssh"
-      user        = "ubuntu"
-      private_key = file("C:/Users/LENOVO/Desktop/TASK-4/Task4.pem")
-      host        = aws_instance.strapi_instance.public_ip
-    }
-  }
+  user_data = <<-EOF
+              #!/bin/bash
+              apt-get update -y
+              apt-get install -y docker.io docker-compose
+              systemctl start docker
+              systemctl enable docker
+              ufw allow 'Nginx Full'
+              git clone https://github.com/naikpradyumna295/Task--4-Pradyumna-.git /home/ubuntu/strapi-app
+              cd /home/ubuntu/strapi-app
+              docker-compose up -d
+              apt-get install -y certbot python3-certbot-nginx
+              certbot --nginx -d Pradyumna.contentecho.in --non-interactive --agree-tos --email your-email@example.com
+              EOF
 
   tags = {
     Name = "StrapiInstance"
@@ -90,4 +76,9 @@ resource "aws_security_group" "strapi_sg" {
 
 output "instance_public_ip" {
   value = aws_instance.strapi_instance.public_ip
+}
+
+variable "ssh_public_key" {
+  description = "The public SSH key"
+  type        = string
 }
