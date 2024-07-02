@@ -43,7 +43,7 @@ resource "aws_instance" "strapi_instance" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("C:/Users/LENOVO/Desktop/TASK-4/Task4NewUnique2.pem")
+      private_key = file(C:/Users/LENOVO/Desktop/TASK-4/Task4NewUnique2.pem)
       host        = self.public_ip
     }
   }
