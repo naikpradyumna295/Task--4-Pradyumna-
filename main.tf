@@ -17,6 +17,13 @@ resource "aws_instance" "strapi_instance" {
   provisioner "file" {
     content     = var.ssh_private_key
     destination = "/home/ubuntu/Task4New1.pem"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = var.ssh_private_key
+      host        = self.public_ip
+    }
   }
 
   provisioner "remote-exec" {
@@ -30,14 +37,14 @@ resource "aws_instance" "strapi_instance" {
       "cd /home/ubuntu/strapi-app",
       "sudo docker-compose up -d",
       "sudo apt-get install -y certbot python3-certbot-nginx",
-      "sudo certbot --nginx -d Pradyumna.contentecho.in --non-interactive --agree-tos --email naikpradyumna295@gmail.com@example.com"
+      "sudo certbot --nginx -d Pradyumna.contentecho.in --non-interactive --agree-tos --email your-email@example.com"
     ]
 
     connection {
       type        = "ssh"
       user        = "ubuntu"
       private_key = var.ssh_private_key
-      host        = aws_instance.strapi_instance.public_ip
+      host        = self.public_ip
     }
   }
 
