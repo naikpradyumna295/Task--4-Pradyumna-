@@ -15,13 +15,13 @@ resource "aws_instance" "strapi_instance" {
   security_groups = [aws_security_group.strapi_sg.name]
 
   provisioner "file" {
-    content     = var.ssh_private_key
+    content     = file("C:/Users/LENOVO/Desktop/TASK-4/Task4NewUnique2.pem")
     destination = "/home/ubuntu/Task4NewUnique2.pem"
 
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = var.ssh_private_key
+      private_key = file("C:/Users/LENOVO/Desktop/TASK-4/Task4NewUnique2.pem")
       host        = self.public_ip
     }
   }
@@ -43,7 +43,7 @@ resource "aws_instance" "strapi_instance" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = var.ssh_private_key
+      private_key = file("C:/Users/LENOVO/Desktop/TASK-4/Task4NewUnique2.pem")
       host        = self.public_ip
     }
   }
