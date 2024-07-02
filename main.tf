@@ -9,7 +9,7 @@ resource "aws_key_pair" "deployer" {
 
 resource "aws_instance" "strapi_instance" {
   ami           = "ami-032346ab877c418af"
-  instance_type = "t2.small"
+  instance_type = "t2.medium"
   key_name      = aws_key_pair.deployer.key_name
 
   security_groups = [aws_security_group.strapi_sg.name]
