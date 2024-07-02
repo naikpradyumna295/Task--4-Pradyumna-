@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "MyNewKeyPair"
+  key_name   = "Task4New"
   public_key = var.ssh_public_key
 }
 
