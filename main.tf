@@ -3,20 +3,20 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "Task4NewUnique"
+  key_name   = "Task4NewUnique1"
   public_key = var.ssh_public_key
 }
 
 resource "aws_instance" "strapi_instance" {
-  ami           = "ami-04b70fa74e45c3917"
-  instance_type = "t2.micro"
+  ami           = "ami-032346ab877c418af"
+  instance_type = "t2.small"
   key_name      = aws_key_pair.deployer.key_name
 
   security_groups = [aws_security_group.strapi_sg.name]
 
   provisioner "file" {
     content     = var.ssh_private_key
-    destination = "/home/ubuntu/Task4NewUnique.pem"
+    destination = "/home/ubuntu/Task4NewUnique1.pem"
 
     connection {
       type        = "ssh"
