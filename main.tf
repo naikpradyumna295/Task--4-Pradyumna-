@@ -3,20 +3,20 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "Task4NewUnique1"
+  key_name   = "Task4NewUnique2"
   public_key = var.ssh_public_key
 }
 
 resource "aws_instance" "strapi_instance" {
-  ami           = "ami-032346ab877c418af"
-  instance_type = "t2.medium"
+  ami           = "ami-04b70fa74e45c3917"
+  instance_type = "t2.micro"
   key_name      = aws_key_pair.deployer.key_name
 
   security_groups = [aws_security_group.strapi_sg.name]
 
   provisioner "file" {
     content     = var.ssh_private_key
-    destination = "/home/ubuntu/Task4NewUnique1.pem"
+    destination = "/home/ubuntu/Task4NewUnique2.pem"
 
     connection {
       type        = "ssh"
@@ -28,7 +28,7 @@ resource "aws_instance" "strapi_instance" {
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 400 /home/ubuntu/Task4NewUnique.pem",
+      "chmod 400 /home/ubuntu/Task4NewUnique2.pem",
       "sudo apt-get update -y",
       "sudo apt-get install -y docker.io docker-compose",
       "sudo systemctl start docker",
