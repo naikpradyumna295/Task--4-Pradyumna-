@@ -33,6 +33,7 @@ jobs:
       id: apply
       env:
         TF_VAR_ssh_public_key: ${{ secrets.SSH_PUBLIC_KEY }}
+        TF_VAR_ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
       run: terraform apply -auto-approve
 
     - name: Get EC2 public IP
