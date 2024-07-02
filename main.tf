@@ -3,13 +3,13 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "Task4"
+  key_name   = "Task4New"
   public_key = var.ssh_public_key
 }
 
 resource "aws_instance" "strapi_instance" {
   ami           = "ami-04b70fa74e45c3917"
-  instance_type = "t2.medium"
+  instance_type = "t2.micro"
   key_name      = aws_key_pair.deployer.key_name
 
   security_groups = [aws_security_group.strapi_sg.name]
