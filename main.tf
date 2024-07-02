@@ -3,7 +3,7 @@ provider "aws" {
 }
 
 resource "aws_key_pair" "deployer" {
-  key_name   = "Task4New"
+  key_name   = "Task4New1"
   public_key = var.ssh_public_key
 }
 
@@ -16,12 +16,12 @@ resource "aws_instance" "strapi_instance" {
 
   provisioner "file" {
     content     = var.ssh_private_key
-    destination = "/home/ubuntu/Task4New.pem"
+    destination = "/home/ubuntu/Task4New1.pem"
   }
 
   provisioner "remote-exec" {
     inline = [
-      "chmod 400 /home/ubuntu/Task4New.pem",
+      "chmod 400 /home/ubuntu/Task4New1.pem",
       "sudo apt-get update -y",
       "sudo apt-get install -y docker.io docker-compose",
       "sudo systemctl start docker",
@@ -30,7 +30,7 @@ resource "aws_instance" "strapi_instance" {
       "cd /home/ubuntu/strapi-app",
       "sudo docker-compose up -d",
       "sudo apt-get install -y certbot python3-certbot-nginx",
-      "sudo certbot --nginx -d Pradyumna.contentecho.in --non-interactive --agree-tos --email your-email@example.com"
+      "sudo certbot --nginx -d Pradyumna.contentecho.in --non-interactive --agree-tos --email naikpradyumna295@gmail.com@example.com"
     ]
 
     connection {
