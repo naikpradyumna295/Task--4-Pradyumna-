@@ -14,19 +14,32 @@ resource "aws_instance" "strapi_instance" {
 
   security_groups = [aws_security_group.strapi_sg.name]
 
-  user_data = <<-EOF
-              #!/bin/bash
-              apt-get update -y
-              apt-get install -y docker.io docker-compose
-              systemctl start docker
-              systemctl enable docker
-              ufw allow 'Nginx Full'
-              git clone https://github.com/naikpradyumna295/Task--4-Pradyumna-.git /home/ubuntu/strapi-app
-              cd /home/ubuntu/strapi-app
-              docker-compose up -d
-              apt-get install -y certbot python3-certbot-nginx
-              certbot --nginx -d Pradyumna.contentecho.in --non-interactive --agree-tos --email your-email@example.com
-              EOF
+  provisioner "file" {
+    source      = "/mnt/keys/Task4New.pem"
+    destination = "/home/ubuntu/Task4New.pem"
+  }
+
+  provisioner "remote-exec" {
+    inline = [
+      "chmod 400 /home/ubuntu/Task4New.pem",
+      "sudo apt-get update -y",
+      "sudo apt-get install -y docker.io docker-compose",
+      "sudo systemctl start docker",
+      "sudo systemctl enable docker",
+      "sudo ufw allow 'Nginx Full'",
+      "cd /home/ubuntu/strapi-app",
+      "sudo docker-compose up -d",
+      "sudo apt-get install -y certbot python3-certbot-nginx",
+      "sudo certbot --nginx -d Pradyumna.contentecho.in --non-interactive --agree-tos --email your-email@example.com"
+    ]
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = file("/mnt/keys/Task4New.pem")
+      host        = aws_instance.strapi_instance.public_ip
+    }
+  }
 
   tags = {
     Name = "StrapiInstance"
