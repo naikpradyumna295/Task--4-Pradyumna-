@@ -2,15 +2,16 @@ provider "aws" {
   region = "us-east-1"
 }
 
-resource "aws_key_pair" "deployer" {
-  key_name   = "Task4NewUnique2"
-  public_key = var.ssh_public_key
+resource "null_resource" "check_key_pair" {
+  provisioner "local-exec" {
+    command = "./check_key_pair.sh Task4NewUnique2 ~/.ssh/id_rsa.pub"
+  }
 }
 
 resource "aws_instance" "strapi_instance" {
   ami           = "ami-04b70fa74e45c3917"
   instance_type = "t2.micro"
-  key_name      = aws_key_pair.deployer.key_name
+  key_name      = "Task4NewUnique2"
 
   security_groups = [aws_security_group.strapi_sg.name]
 
